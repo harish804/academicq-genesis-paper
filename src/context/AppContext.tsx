@@ -1,10 +1,11 @@
+
 import { createContext, useContext, ReactNode, useState } from "react";
 import { toast } from "sonner";
 
 // Types
 export type Difficulty = "Easy" | "Medium" | "Hard";
 export type BloomLevel = "Remember" | "Understand" | "Apply" | "Analyze" | "Evaluate" | "Create";
-export type QuestionType = "Objective" | "Descriptive";
+export type QuestionType = "Objective" | "Descriptive" | "Fill in the Blanks" | "True/False" | "E-marks";
 
 export interface Question {
   id: string;

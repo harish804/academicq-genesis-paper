@@ -12,6 +12,7 @@ import { SyllabusUpload } from "@/components/syllabus-upload";
 import { Grid3X3, DownloadCloud } from "lucide-react";
 import { useState } from "react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Switch } from "@/components/ui/switch";
 
 export default function GeneratePage() {
   const { 
@@ -27,10 +28,11 @@ export default function GeneratePage() {
   const [marks, setMarks] = useState(1);
   const [difficulty, setDifficulty] = useState<"Easy" | "Medium" | "Hard">("Medium");
   const [bloomLevel, setBloomLevel] = useState<"Remember" | "Understand" | "Apply" | "Analyze" | "Evaluate" | "Create">("Understand");
-  const [type, setType] = useState<"Objective" | "Descriptive">("Objective");
+  const [type, setType] = useState<"Objective" | "Descriptive" | "Fill in the Blanks" | "True/False" | "E-marks">("Objective");
+  const [generateEnabled, setGenerateEnabled] = useState(true);
 
   const handleGenerateQuestion = async () => {
-    if (!topic) return;
+    if (!topic || !generateEnabled) return;
     
     setIsGenerating(true);
     
@@ -98,10 +100,23 @@ export default function GeneratePage() {
             </CardHeader>
             <CardContent>
               <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleGenerateQuestion(); }}>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="generate-enabled" className="cursor-pointer">Generate Questions</Label>
+                  <Switch
+                    id="generate-enabled"
+                    checked={generateEnabled}
+                    onCheckedChange={setGenerateEnabled}
+                  />
+                </div>
+                
                 <div className="space-y-2">
                   <Label htmlFor="topic">Topic</Label>
                   {syllabus ? (
-                    <Select onValueChange={handleSelectTopic} value={topic}>
+                    <Select 
+                      onValueChange={handleSelectTopic} 
+                      value={topic}
+                      disabled={!generateEnabled}
+                    >
                       <SelectTrigger id="topic">
                         <SelectValue placeholder="Select a topic" />
                       </SelectTrigger>
@@ -126,6 +141,7 @@ export default function GeneratePage() {
                       placeholder="Enter topic"
                       value={topic}
                       onChange={(e) => setTopic(e.target.value)}
+                      disabled={!generateEnabled}
                     />
                   )}
                 </div>
@@ -136,6 +152,7 @@ export default function GeneratePage() {
                     <Select 
                       value={marks.toString()} 
                       onValueChange={(value) => setMarks(parseInt(value))}
+                      disabled={!generateEnabled}
                     >
                       <SelectTrigger id="marks">
                         <SelectValue placeholder="Marks" />
@@ -153,6 +170,7 @@ export default function GeneratePage() {
                     <Select 
                       value={difficulty} 
                       onValueChange={(value) => setDifficulty(value as any)}
+                      disabled={!generateEnabled}
                     >
                       <SelectTrigger id="difficulty">
                         <SelectValue placeholder="Difficulty" />
@@ -171,6 +189,7 @@ export default function GeneratePage() {
                   <Select 
                     value={bloomLevel} 
                     onValueChange={(value) => setBloomLevel(value as any)}
+                    disabled={!generateEnabled}
                   >
                     <SelectTrigger id="bloom">
                       <SelectValue placeholder="Bloom's Level" />
@@ -191,13 +210,17 @@ export default function GeneratePage() {
                   <Select 
                     value={type} 
                     onValueChange={(value) => setType(value as any)}
+                    disabled={!generateEnabled}
                   >
                     <SelectTrigger id="type">
                       <SelectValue placeholder="Question Type" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Objective">Objective</SelectItem>
+                      <SelectItem value="Objective">Multiple Choice (MCQ)</SelectItem>
                       <SelectItem value="Descriptive">Descriptive</SelectItem>
+                      <SelectItem value="Fill in the Blanks">Fill in the Blanks</SelectItem>
+                      <SelectItem value="True/False">True/False</SelectItem>
+                      <SelectItem value="E-marks">E-marks (Multi-part)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -205,15 +228,17 @@ export default function GeneratePage() {
                 <Button 
                   type="submit" 
                   className="w-full" 
-                  disabled={!topic || isGenerating}
+                  disabled={(!topic && generateEnabled) || isGenerating || !generateEnabled}
                 >
                   {isGenerating ? (
                     <>
                       <LoadingSpinner size="sm" className="mr-2" />
                       Generating...
                     </>
-                  ) : (
+                  ) : generateEnabled ? (
                     "Generate Question"
+                  ) : (
+                    "No Questions"
                   )}
                 </Button>
               </form>

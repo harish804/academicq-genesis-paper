@@ -27,30 +27,50 @@ const mockQuestionGeneration = (
       
       // Generate content based on parameters
       let content = "";
-      if (type === "Objective") {
-        const options = ["A", "B", "C", "D"];
-        content = `Question about ${topic} (${difficulty} difficulty, ${bloomLevel} level):\n\n`;
-        if (bloomLevel === "Remember") {
-          content += `What is a key concept in ${topic}?\n\n`;
-        } else if (bloomLevel === "Understand") {
-          content += `Explain how ${topic} relates to engineering principles.\n\n`;
-        } else {
-          content += `Analyze the implications of ${topic} in a practical scenario.\n\n`;
-        }
-        
-        options.forEach(opt => {
-          content += `${opt}) Sample option text for ${topic}\n`;
-        });
-      } else {
-        content = `${difficulty} level ${bloomLevel} question about ${topic}:\n\n`;
-        
-        if (marks === 1) {
-          content += `Briefly define ${topic}.`;
-        } else if (marks === 2) {
-          content += `Explain the concept of ${topic} with a simple example.`;
-        } else {
-          content += `Provide a detailed analysis of ${topic}, discussing its principles, applications, and limitations in engineering contexts. Illustrate with relevant examples and diagrams where appropriate.`;
-        }
+      
+      switch(type) {
+        case "Objective":
+          const options = ["A", "B", "C", "D"];
+          content = `Question about ${topic} (${difficulty} difficulty, ${bloomLevel} level):\n\n`;
+          content += `Which of the following best describes ${topic}?\n\n`;
+          options.forEach(opt => {
+            content += `${opt}) Sample option text for ${topic}\n`;
+          });
+          break;
+          
+        case "Descriptive":
+          content = `${difficulty} level ${bloomLevel} question about ${topic}:\n\n`;
+          
+          if (marks === 1) {
+            content += `Briefly define ${topic}.`;
+          } else if (marks === 2) {
+            content += `Explain the concept of ${topic} with a simple example.`;
+          } else {
+            content += `Provide a detailed analysis of ${topic}, discussing its principles, applications, and limitations in engineering contexts. Illustrate with relevant examples and diagrams where appropriate.`;
+          }
+          break;
+          
+        case "Fill in the Blanks":
+          content = `${difficulty} level ${bloomLevel} fill in the blanks question:\n\n`;
+          content += `In the context of ${topic}, _____________ is a fundamental concept that relates to _____________.`;
+          break;
+          
+        case "True/False":
+          content = `${difficulty} level ${bloomLevel} true/false question:\n\n`;
+          content += `State whether the following statement is TRUE or FALSE and justify your answer:\n\n`;
+          content += `"${topic} is primarily used for optimization in most engineering applications."`;
+          break;
+          
+        case "E-marks":
+          content = `${difficulty} level ${bloomLevel} e-marks question about ${topic}:\n\n`;
+          content += `Consider the following scenario related to ${topic} and solve all parts:\n\n`;
+          content += `a) Define ${topic} and explain its significance. (2 marks)\n`;
+          content += `b) Analyze how ${topic} is applied in a practical scenario. (2 marks)\n`;
+          content += `c) Evaluate the effectiveness of ${topic} in solving complex problems. (2 marks)\n`;
+          break;
+          
+        default:
+          content = `Question about ${topic} (${difficulty} difficulty, ${bloomLevel} level)`;
       }
       
       // Create and return question object
