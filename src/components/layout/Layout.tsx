@@ -1,5 +1,5 @@
 
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "sonner";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import { ReactNode } from "react";
