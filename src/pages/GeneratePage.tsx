@@ -17,8 +17,7 @@ import { Switch } from "@/components/ui/switch";
 export default function GeneratePage() {
   const { 
     questions, 
-    addQuestion, 
-    removeQuestion,
+    setQuestions,
     syllabus,
     isGenerating, 
     setIsGenerating 
@@ -45,7 +44,7 @@ export default function GeneratePage() {
     );
     
     if (newQuestion) {
-      addQuestion(newQuestion);
+      setQuestions(prev => [...prev, newQuestion]);
     }
     
     setIsGenerating(false);
@@ -64,9 +63,9 @@ export default function GeneratePage() {
     
     if (regeneratedQuestion) {
       // Remove the old question
-      removeQuestion(question.id);
+      setQuestions(prev => prev.filter(q => q.id !== question.id));
       // Add the new question
-      addQuestion(regeneratedQuestion);
+      setQuestions(prev => [...prev, regeneratedQuestion]);
     }
     
     setIsGenerating(false);
@@ -79,6 +78,11 @@ export default function GeneratePage() {
 
   const handleSelectTopic = (selectedTopic: string) => {
     setTopic(selectedTopic);
+  };
+
+  // Function to remove a question
+  const removeQuestion = (id: string) => {
+    setQuestions(prev => prev.filter(question => question.id !== id));
   };
 
   return (
@@ -126,9 +130,9 @@ export default function GeneratePage() {
                             <div className="px-2 py-1.5 text-sm font-semibold bg-muted/50">
                               {chapter.name}
                             </div>
-                            {chapter.topics.map((topic) => (
-                              <SelectItem key={topic} value={topic}>
-                                {topic}
+                            {chapter.topics.map((topicItem) => (
+                              <SelectItem key={topicItem.name} value={topicItem.name}>
+                                {topicItem.name}
                               </SelectItem>
                             ))}
                           </div>
@@ -160,6 +164,7 @@ export default function GeneratePage() {
                       <SelectContent>
                         <SelectItem value="1">1 Mark</SelectItem>
                         <SelectItem value="2">2 Marks</SelectItem>
+                        <SelectItem value="3">3 Marks</SelectItem>
                         <SelectItem value="5">5 Marks</SelectItem>
                       </SelectContent>
                     </Select>

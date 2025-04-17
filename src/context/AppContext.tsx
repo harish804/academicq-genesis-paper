@@ -21,6 +21,7 @@ export interface SyllabusMeta {
   department?: string;
   semester?: string;
   year?: string;
+  description?: string;
 }
 
 export interface Syllabus {
@@ -74,6 +75,7 @@ interface AppContextProps {
   isGenerating: boolean;
   setIsGenerating: React.Dispatch<React.SetStateAction<boolean>>;
   generateBlueprint: () => Question[];
+  clearQuestions: () => void;
 }
 
 const AppContext = createContext<AppContextProps | null>(null);
@@ -110,6 +112,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
     }
   });
+
+  // Clear all questions
+  const clearQuestions = () => {
+    setQuestions([]);
+  };
 
   // Parse syllabus from text
   const parseSyllabusFromText = (text: string) => {
@@ -189,7 +196,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       chaptersToUseA.forEach(chapter => {
         for (let i = 0; i < 2 && questionCount <= maxSectionAQuestions; i++) {
           const topicIndex = Math.min(i, chapter.topics.length - 1);
-          const topic = chapter.topics[topicIndex] || chapter.name;
+          const topic = chapter.topics[topicIndex]?.name || chapter.name;
           
           blueprintQuestions.push({
             id: `A${questionCount}`,
@@ -219,9 +226,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       chaptersToUseB.forEach(chapter => {
         for (let i = 0; i < 2 && questionCount <= maxSectionBQuestionSets; i++) {
           const topicIndex = Math.min(i, chapter.topics.length - 1);
-          const topic = chapter.topics[topicIndex] || chapter.name;
+          const topic = chapter.topics[topicIndex]?.name || chapter.name;
           const alternateTopicIndex = Math.min(i + 1, chapter.topics.length - 1);
-          const alternateTopic = chapter.topics[alternateTopicIndex] || chapter.name;
+          const alternateTopic = chapter.topics[alternateTopicIndex]?.name || chapter.name;
           
           blueprintQuestions.push({
             id: `B${questionCount}a`,
@@ -267,7 +274,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     parseSyllabusFromText,
     isGenerating,
     setIsGenerating,
-    generateBlueprint
+    generateBlueprint,
+    clearQuestions
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

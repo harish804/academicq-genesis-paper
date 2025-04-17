@@ -1,4 +1,3 @@
-
 import { Question, Difficulty, BloomLevel, QuestionType } from "@/context/AppContext";
 import { toast } from "sonner";
 
@@ -45,6 +44,8 @@ const mockQuestionGeneration = (
             content += `Briefly define ${topic}.`;
           } else if (marks === 2) {
             content += `Explain the concept of ${topic} with a simple example.`;
+          } else if (marks === 3) {
+            content += `Describe ${topic} and explain its importance in the field with examples.`;
           } else {
             content += `Provide a detailed analysis of ${topic}, discussing its principles, applications, and limitations in engineering contexts. Illustrate with relevant examples and diagrams where appropriate.`;
           }
@@ -64,9 +65,15 @@ const mockQuestionGeneration = (
         case "E-marks":
           content = `${difficulty} level ${bloomLevel} e-marks question about ${topic}:\n\n`;
           content += `Consider the following scenario related to ${topic} and solve all parts:\n\n`;
-          content += `a) Define ${topic} and explain its significance. (2 marks)\n`;
-          content += `b) Analyze how ${topic} is applied in a practical scenario. (2 marks)\n`;
-          content += `c) Evaluate the effectiveness of ${topic} in solving complex problems. (2 marks)\n`;
+          if (marks === 3) {
+            content += `a) Define ${topic} and explain its significance. (1 mark)\n`;
+            content += `b) Analyze how ${topic} is applied in a practical scenario. (1 mark)\n`;
+            content += `c) Evaluate the effectiveness of ${topic} in solving problems. (1 mark)\n`;
+          } else {
+            content += `a) Define ${topic} and explain its significance. (2 marks)\n`;
+            content += `b) Analyze how ${topic} is applied in a practical scenario. (2 marks)\n`;
+            content += `c) Evaluate the effectiveness of ${topic} in solving complex problems. (2 marks)\n`;
+          }
           break;
           
         default:
