@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useApp } from "@/context/AppContext";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -253,6 +252,50 @@ export default function BlueprintPage() {
                   )}
                 </Button>
               </form>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Question Distribution</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Section A Questions</Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    value={blueprintConfig.numberOfQuestions.sectionA}
+                    onChange={(e) => {
+                      setBlueprintConfig({
+                        ...blueprintConfig,
+                        numberOfQuestions: {
+                          ...blueprintConfig.numberOfQuestions,
+                          sectionA: parseInt(e.target.value)
+                        }
+                      });
+                    }}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Section B Question Sets</Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    value={blueprintConfig.numberOfQuestions.sectionB}
+                    onChange={(e) => {
+                      setBlueprintConfig({
+                        ...blueprintConfig,
+                        numberOfQuestions: {
+                          ...blueprintConfig.numberOfQuestions,
+                          sectionB: parseInt(e.target.value)
+                        }
+                      });
+                    }}
+                  />
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
